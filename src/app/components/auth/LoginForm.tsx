@@ -45,8 +45,6 @@ export function LoginForm() {
           <a className="text-center text-sm text-[#49709c] underline cursor-pointer" href="/registration">Ainda não possui uma conta?</a>
         </li>
       </ul>
-
-
     </form>
   )
 }
