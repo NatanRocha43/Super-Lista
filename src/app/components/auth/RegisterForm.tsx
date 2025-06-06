@@ -5,7 +5,8 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase"; // ajuste o caminho conforme seu projeto
+import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
 
 type Toast = {
   message: string;
@@ -13,15 +14,15 @@ type Toast = {
 };
 
 export function RegisterForm() {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [toast, setToast] = useState<Toast | null>(null);
 
-  // Limpa o toast automaticamente após 5 segundos
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(null), 5000);
@@ -52,6 +53,9 @@ export function RegisterForm() {
       }
 
       showToast("Conta criada com sucesso!", "success");
+
+      router.replace("/dashboard");
+
       setUsername("");
       setEmail("");
       setPassword("");
@@ -88,9 +92,22 @@ export function RegisterForm() {
 
   return (
     <>
+      {/* Toast popup fixado no topo */}
+      {toast && (
+        <div
+          className={`fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-md text-white font-semibold shadow-lg transition-opacity duration-500 z-50 ${
+            toast.type === "success" ? "bg-green-600" : "bg-red-600"
+          }`}
+          role="alert"
+          aria-live="assertive"
+        >
+          {toast.message}
+        </div>
+      )}
+
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-4 max-w-md w-full mx-auto"
+        className="flex flex-col gap-4 max-w-md w-full mx-auto mt-20"
       >
         <h1 className="text-center text-3xl font-bold text-[#0d141c]">
           Criar conta
@@ -151,21 +168,6 @@ export function RegisterForm() {
           </li>
         </ul>
       </form>
-
-      {/* Popup / Toast */}
-      {toast && (
-        <div
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-md text-white font-semibold shadow-lg transition-opacity duration-500 ${
-            toast.type === "success"
-              ? "bg-green-600"
-              : "bg-red-600"
-          }`}
-          role="alert"
-          aria-live="assertive"
-        >
-          {toast.message}
-        </div>
-      )}
     </>
   );
 }

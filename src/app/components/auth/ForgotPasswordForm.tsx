@@ -14,6 +14,7 @@ export function PasswordResetForm() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<Toast | null>(null);
 
+  // Limpa o toast automaticamente após 5 segundos
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(null), 5000);
@@ -31,10 +32,12 @@ export function PasswordResetForm() {
 
     try {
       await sendPasswordResetEmail(auth, email);
+
       showToast(
         "E-mail de redefinição de senha enviado com sucesso! Verifique sua caixa de entrada (ou spam).",
         "success"
       );
+
       setEmail("");
     } catch (error: unknown) {
       console.error("Erro no envio do e-mail de redefinição:", error);
@@ -85,6 +88,7 @@ export function PasswordResetForm() {
           onChange={(e) => setEmail(e.target.value)}
           className="h-14 px-4 border border-[#cedae8] rounded-lg text-[#0d141c] placeholder:text-[#49709c] bg-slate-50"
           required
+          disabled={loading}
         />
 
         <button
@@ -94,15 +98,24 @@ export function PasswordResetForm() {
         >
           {loading ? "Enviando..." : "Enviar link de redefinição"}
         </button>
+
+        <ul className="flex flex-col gap-2 m-auto text-center">
+          <li>
+            <a
+              className="text-center text-sm text-[#49709c] underline cursor-pointer"
+              href="/login"
+            >
+              Login
+            </a>
+          </li>
+        </ul>
       </form>
 
       {/* Popup / Toast */}
       {toast && (
         <div
           className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-md text-white font-semibold shadow-lg transition-opacity duration-500 ${
-            toast.type === "success"
-              ? "bg-green-600"
-              : "bg-red-600"
+            toast.type === "success" ? "bg-green-600" : "bg-red-600"
           }`}
           role="alert"
           aria-live="assertive"
