@@ -64,7 +64,7 @@ export function ForgotPasswordForm() {
         {error && <p className="text-red-600 text-sm text-center">{error}</p>}
 
         <div className="text-center mt-4">
-          <a href="/" className="text-sm text-[#49709c] underline">
+          <a href="/login" className="text-sm text-[#49709c] underline">
             Voltar ao login
           </a>
         </div>
